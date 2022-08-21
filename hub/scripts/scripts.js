@@ -21,7 +21,7 @@ const LIBS = '/libs';
 const CONFIG = {
   codeRoot: '/hub',
   contentRoot: '/hub',
-  imsClientId: 'college',
+  imsClientId: 'DocumentCloud1', // This will need to change per hub.
   locales: {
     '': { ietf: 'en-US', tk: 'hah7vzn.css' },
     de: { ietf: 'de-DE', tk: 'hah7vzn.css' },
