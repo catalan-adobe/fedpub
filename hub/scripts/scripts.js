@@ -71,11 +71,11 @@ async function loadBlock(block) {
       if (!name) {
           return;
       }
-      const config = blocks[name];
-      if (!config) {
+      if (!block.classList.contains("callout")) {
           return;
       }
 
+      const config = blocks["callout"];
       try {
           if (config.css) {
               loadCSS({
@@ -89,7 +89,7 @@ async function loadBlock(block) {
 }
 
 function loadBlocks() {
-  document.querySelectorAll('main > div > .block')
+  document.querySelectorAll('main > div.block')
       .forEach(async (block) => loadBlock(block));
 }
 
@@ -104,7 +104,7 @@ function decorateBlock(block) {
 }
 
 function decorateBlocks() {
-  document.querySelectorAll('main > div > div').forEach(decorateBlock);
+  document.querySelectorAll('main .section.callout').forEach(decorateBlock);
 }
 
 
