@@ -37,6 +37,80 @@ const CONFIG = {
 
 /*
  * ------------------------------------------------------------
+ * FedsPub
+ * ------------------------------------------------------------
+ */
+
+
+const blocks = {
+  callout: {
+      css: '/hub/blocks/callout/callout.css',
+  }
+};
+
+function debug(msg) {
+  if (new URLSearchParams(window.location.search).has('debug')) {
+      console.log(msg);
+  }
+}
+
+function loadCSS(config = {}) {
+  if (!config.path || document.querySelector(`head > link[href='${config.path}']`)) {
+      return;
+  }
+
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = config.path;
+  document.head.append(link);
+}
+
+async function loadBlock(block) {
+  if (!block.getAttribute('data-block-loaded')) {
+      const name = block.getAttribute('data-block-name');
+      if (!name) {
+          return;
+      }
+      const config = blocks[name];
+      if (!config) {
+          return;
+      }
+
+      try {
+          if (config.css) {
+              loadCSS({
+                  path: config.css,
+              });
+          }
+      } catch (e) {
+          debug(`failed to load block ${name}`, config);
+      }
+  }
+}
+
+function loadBlocks() {
+  document.querySelectorAll('main > div > .block')
+      .forEach(async (block) => loadBlock(block));
+}
+
+function decorateBlock(block) {
+  const name = block.classList[0];
+  if (!name) {
+      return;
+  }
+
+  block.classList.add('block');
+  block.setAttribute('data-block-name', name);
+}
+
+function decorateBlocks() {
+  document.querySelectorAll('main > div > div').forEach(decorateBlock);
+}
+
+
+
+/*
+ * ------------------------------------------------------------
  * Edit below at your own risk
  * ------------------------------------------------------------
  */
@@ -60,4 +134,6 @@ const { loadArea, loadDelayed, setConfig } = await import(`${miloLibs}/utils/uti
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
   loadDelayed();
+  decorateBlocks();
+  await loadBlocks();
 }());
